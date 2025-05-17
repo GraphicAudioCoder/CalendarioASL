@@ -11,7 +11,8 @@ function formatDate(date) {
 function Calendario() {
   const [eventi, setEventi] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [ora, setOra] = useState("");
+  const [oraInizio, setOraInizio] = useState("");
+  const [oraFine, setOraFine] = useState("");
   const [descrizione, setDescrizione] = useState("");
   const [utente, setUtente] = useState("");
   const [loading, setLoading] = useState(false);
@@ -31,16 +32,17 @@ function Calendario() {
   const aggiungiEvento = async (e) => {
     e.preventDefault();
     if (loading) return;
-    // Controlla se esiste già un evento con la stessa ora
-    if (eventiGiorno.some(ev => ev.ora === ora)) {
-      alert("Esiste già un evento per questa ora.");
+    // Controlla se esiste già un evento con la stessa oraInizio e oraFine
+    if (eventiGiorno.some(ev => ev.oraInizio === oraInizio && ev.oraFine === oraFine)) {
+      alert("Esiste già un evento per questa fascia oraria.");
       return;
     }
     setLoading(true);
     try {
       const formData = new URLSearchParams();
       formData.append("data", dataSelezionata);
-      formData.append("ora", ora);
+      formData.append("oraInizio", oraInizio);
+      formData.append("oraFine", oraFine);
       formData.append("descrizione", descrizione);
       formData.append("utente", utente);
 
@@ -54,7 +56,7 @@ function Calendario() {
 
       if (!res.ok) throw new Error(`Errore HTTP: ${res.status}`);
 
-      setOra(""); setDescrizione(""); setUtente("");
+      setOraInizio(""); setOraFine(""); setDescrizione(""); setUtente("");
 
       const resGet = await fetch(API_URL);
       const nuoviEventi = await resGet.json();
@@ -67,7 +69,7 @@ function Calendario() {
 
   // Rimuovi evento (richiede conferma)
   const rimuoviEvento = async (evento) => {
-    if (!window.confirm(`Vuoi davvero eliminare questo evento?\n\nOra: ${evento.ora}\nDescrizione: ${evento.descrizione}\nUtente: ${evento.utente}`)) {
+    if (!window.confirm(`Vuoi davvero eliminare questo evento?\n\n${evento.oraInizio} - ${evento.oraFine}\n${evento.descrizione}\n${evento.utente}`)) {
       return;
     }
     setLoading(true);
@@ -75,7 +77,8 @@ function Calendario() {
       const formData = new URLSearchParams();
       formData.append("action", "delete");
       formData.append("data", evento.data);
-      formData.append("ora", evento.ora);
+      formData.append("oraInizio", evento.oraInizio);
+      formData.append("oraFine", evento.oraFine);
       formData.append("descrizione", evento.descrizione);
       formData.append("utente", evento.utente);
 
@@ -128,13 +131,18 @@ function Calendario() {
           <table className="eventi-table">
             <thead>
               <tr>
-                <th>Ora</th><th>Descrizione</th><th>Utente</th><th></th>
+                <th>Ora Inizio</th>
+                <th>Ora Fine</th>
+                <th>Evento</th>
+                <th>Utente</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
               {eventiGiorno.map((ev, i) => (
                 <tr key={i}>
-                  <td>{ev.ora}</td>
+                  <td>{ev.oraInizio}</td>
+                  <td>{ev.oraFine}</td>
                   <td>{ev.descrizione}</td>
                   <td>{ev.utente}</td>
                   <td>
@@ -153,8 +161,9 @@ function Calendario() {
       </div>
       <form className="aggiungi-form" onSubmit={aggiungiEvento}>
         <h4>Aggiungi evento per il {dataSelezionata}</h4>
-        <input type="time" value={ora} onChange={e => setOra(e.target.value)} required />
-        <input type="text" placeholder="Descrizione" value={descrizione} onChange={e => setDescrizione(e.target.value)} required />
+        <input type="time" value={oraInizio} onChange={e => setOraInizio(e.target.value)} required />
+        <input type="time" value={oraFine} onChange={e => setOraFine(e.target.value)} required />
+        <input type="text" placeholder="Evento" value={descrizione} onChange={e => setDescrizione(e.target.value)} required />
         <input type="text" placeholder="Utente" value={utente} onChange={e => setUtente(e.target.value)} required />
         <button type="submit" disabled={loading}>
           {loading ? "Attendi..." : "Aggiungi Evento"}
