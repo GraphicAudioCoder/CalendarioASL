@@ -188,12 +188,30 @@ function Calendario() {
           border-radius: 16px;
           border: 1.5px solid #2d3a4a;
           color: #e0e6ed;
-          font-size: 22px;
+          font-size: 18px;
           box-shadow: 0 2px 16px #0002;
           padding: 16px 8px;
           width: 100%;
-          max-width: 520px;
-          min-width: 380px;
+          max-width: 420px;
+          min-width: 0;
+        }
+        @media (max-width: 600px) {
+          .calendario-root {
+            padding: 8px 0 32px 0;
+          }
+          .react-calendar {
+            font-size: 15px;
+            max-width: 100vw;
+            padding: 4px 0;
+          }
+          .eventi-table th, .eventi-table td {
+            padding: 8px 4px;
+            font-size: 14px;
+          }
+          .aggiungi-form input, .aggiungi-form button {
+            font-size: 14px;
+            padding: 6px 8px;
+          }
         }
         .react-calendar__navigation {
           display: flex;
@@ -201,10 +219,10 @@ function Calendario() {
           margin-bottom: 1em;
         }
         .react-calendar__navigation button {
-          min-width: 44px;
+          min-width: 36px;
           background: none;
           color: #7ecbff;
-          font-size: 1.3em;
+          font-size: 1.1em;
           font-weight: 600;
           border: none;
           border-radius: 8px;
@@ -217,17 +235,17 @@ function Calendario() {
         }
         .react-calendar__navigation__label {
           color: #e0e6ed;
-          font-size: 1.25em;
+          font-size: 1.1em;
           font-weight: 600;
         }
         .react-calendar__month-view__weekdays {
-          font-size: 1.1em;
+          font-size: 1em;
         }
         .react-calendar__tile {
           border-radius: 8px;
           transition: background 0.2s, color 0.2s;
           color: #e0e6ed !important;
-          font-size: 1.15em;
+          font-size: 1em;
         }
         .react-calendar__tile--now {
           background: #263445 !important;
