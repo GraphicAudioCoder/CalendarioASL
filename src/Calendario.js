@@ -27,7 +27,10 @@ function Calendario() {
   }, []);
 
   const dataSelezionata = formatDate(selectedDate);
-  const eventiGiorno = eventi.filter(ev => ev.data === dataSelezionata);
+  // Ordina gli eventi del giorno per oraInizio crescente
+  const eventiGiorno = eventi
+    .filter(ev => ev.data === dataSelezionata)
+    .sort((a, b) => (a.oraInizio || "").localeCompare(b.oraInizio || ""));
 
   const aggiungiEvento = async (e) => {
     e.preventDefault();
